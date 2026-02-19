@@ -5,6 +5,6 @@ void default_constants();
 // own functions
 void left_start_auton();
 void right_start_auton();
-void left_start_matchload();
+void left_start_deload();
 void temp_skills();
 void mid_start_skills();

@@ -20,22 +20,22 @@ pros::Motor intake_stage2(5);
 
 namespace {
 // Leave disabled until port + plumbing are finalized.
-constexpr bool MATCHLOAD_ENABLED = false;
-constexpr char MATCHLOAD_ADI_PORT = 'Lamy';
-pros::adi::DigitalOut* matchload_piston = nullptr;
-bool matchload_raised_state = false;
+constexpr bool DELOAD_ENABLED = false;
+constexpr char DELOAD_ADI_PORT = 'Lamy';
+pros::adi::DigitalOut* deload_piston = nullptr;
+bool deload_raised_state = false;
 }  // namespace
 
-void matchload_set(bool raised) {
-  matchload_raised_state = raised;
-  if (matchload_piston != nullptr) {
-    matchload_piston->set_value(raised);
+void deload_set(bool raised) {
+  deload_raised_state = raised;
+  if (deload_piston != nullptr) {
+    deload_piston->set_value(raised);
   }
 }
 
-void matchload_toggle() { matchload_set(!matchload_raised_state); }
+void deload_toggle() { deload_set(!deload_raised_state); }
 
-bool matchload_is_raised() { return matchload_raised_state; }
+bool deload_is_raised() { return deload_raised_state; }
 
 void intake_control() {
   if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -74,9 +74,9 @@ void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
 
-  if (MATCHLOAD_ENABLED) {
-    matchload_piston = new pros::adi::DigitalOut(MATCHLOAD_ADI_PORT);
-    matchload_set(false);  // Start lowered by default.
+  if (DELOAD_ENABLED) {
+    deload_piston = new pros::adi::DigitalOut(DELOAD_ADI_PORT);
+    deload_set(false);  // Start lowered by default.
   }
 
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
@@ -103,13 +103,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"skills for starting mid\n\nline up mid", mid_start_skills},
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
+      {"left start deload\n\nleft start with deload", left_start_deload},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
-      {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
-      {"skills for starting right side\n\nback left corner lines up with black corner to the nail", right_start_skills},
-      {"park zone skills\n\nstart right in front", park_zone_skills}
+      {"skills for starting mid\n\nline up mid", mid_start_skills},
   });
 
   // Initialize chassis and auton selector
@@ -156,7 +154,7 @@ void autonomous() {
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_imu_reset();                  // Reset IMU heading so turn targets are repeatable
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
-  matchload_set(false);                       // Keep lowered unless an auton explicitly changes it.
+  deload_set(false);                       // Keep lowered unless an auton explicitly changes it.
 
   /*
   Odometry and Pure Pursuit are not magic
@@ -273,7 +271,7 @@ void opcontrol() {
     // . . .
     intake_control();
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-      matchload_toggle();
+      deload_toggle();
     }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
