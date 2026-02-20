@@ -18,25 +18,6 @@ ez::Drive chassis(
 pros::Motor intake(16);
 pros::Motor intake_stage2(5);
 
-namespace {
-// Leave disabled until port + plumbing are finalized.
-constexpr bool DELOAD_ENABLED = false;
-constexpr char DELOAD_ADI_PORT = 'Lamy';
-pros::adi::DigitalOut* deload_piston = nullptr;
-bool deload_raised_state = false;
-}  // namespace
-
-void deload_set(bool raised) {
-  deload_raised_state = raised;
-  if (deload_piston != nullptr) {
-    deload_piston->set_value(raised);
-  }
-}
-
-void deload_toggle() { deload_set(!deload_raised_state); }
-
-bool deload_is_raised() { return deload_raised_state; }
-
 void intake_control() {
   if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
     intake.move(127);
@@ -74,10 +55,8 @@ void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
 
-  if (DELOAD_ENABLED) {
-    deload_piston = new pros::adi::DigitalOut(DELOAD_ADI_PORT);
-    deload_set(false);  // Start lowered by default.
-  }
+  deload.set(PISTON_CONTRACTED);     // Start contracted by default.
+  matchload.set(PISTON_CONTRACTED);  // Start contracted by default.
 
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
   //  - change `back` to `front` if the tracking wheel is in front of the midline
@@ -92,7 +71,7 @@ void initialize() {
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.4);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.5, 0.5);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
-  chassis.opcontrol_speed_max_set(90);            // Cap driver speed to keep acceleration manageable on a light robot.
+  chassis.opcontrol_speed_max_set(100);            // Cap driver speed to keep acceleration manageable on a light robot.
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -154,7 +133,8 @@ void autonomous() {
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_imu_reset();                  // Reset IMU heading so turn targets are repeatable
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
-  deload_set(false);                       // Keep lowered unless an auton explicitly changes it.
+  deload.set(PISTON_CONTRACTED);               // Keep contracted unless an auton explicitly changes it.
+  matchload.set(PISTON_CONTRACTED);            // Keep contracted unless an auton explicitly changes it.
 
   /*
   Odometry and Pure Pursuit are not magic
@@ -270,9 +250,9 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     intake_control();
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-      deload_toggle();
-    }
+
+    matchload.button_toggle(master.get_digital(pros::E_CONTROLLER_DIGITAL_B));
+    deload.button_toggle(master.get_digital(pros::E_CONTROLLER_DIGITAL_A));
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

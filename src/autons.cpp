@@ -131,9 +131,9 @@ void right_start_auton() {
 }
 
 void left_start_deload() {
-  // 0) set imu and start match with deloader raised
+  // 0) set imu and start match with deloader contracted
   chassis.drive_imu_reset();
-  deload_set(false);
+  deload.set(PISTON_CONTRACTED);
   pros::delay(100);
 
   // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
@@ -199,8 +199,8 @@ void left_start_deload() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 10.5) raise deloader
-  deload_set(true);
+  // 10.5) extend deloader
+  deload.set(PISTON_EXTENDED);
   pros::delay(100);
 
   // 11) Back up 30 in
