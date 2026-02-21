@@ -12,8 +12,8 @@ extern pros::Motor intake_stage2;
 // pneumatics
 constexpr bool PISTON_CONTRACTED = false;
 constexpr bool PISTON_EXTENDED = true;
-inline ez::Piston matchload('A');
-inline ez::Piston deload('B');
+inline ez::Piston matchload('E');
+inline ez::Piston deload('D');
 
 // inline pros::Motor intake(1);
 // inline pros::adi::DigitalIn limit_switch('A');
