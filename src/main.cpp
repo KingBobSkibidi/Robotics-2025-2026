@@ -82,10 +82,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
-      {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
+      {"deload test\n\ntest deload", test_deload}, 
       {"left start deload\n\nleft start with deload", left_start_deload},
       {"left start deload and matchload\n\nleft start with deload and matchload", left_start_deload_and_matchload},
+      {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
+      {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"skills for starting mid\n\nline up mid", mid_start_skills},
   });

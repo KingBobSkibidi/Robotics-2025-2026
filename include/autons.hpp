@@ -8,4 +8,5 @@ void right_start_auton();
 void left_start_deload();
 void left_start_deload_and_matchload();
 void temp_skills();
+void test_deload();
 void mid_start_skills();
