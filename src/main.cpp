@@ -71,7 +71,7 @@ void initialize() {
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.4);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.5, 0.5);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
-  chassis.opcontrol_speed_max_set(100);            // Cap driver speed to keep acceleration manageable on a light robot.
+  chassis.opcontrol_speed_max_set(127);            // Cap driver speed to keep acceleration manageable on a light robot.
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -85,6 +85,7 @@ void initialize() {
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
       {"left start deload\n\nleft start with deload", left_start_deload},
+      {"left start deload and matchload\n\nleft start with deload and matchload", left_start_deload_and_matchload},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"skills for starting mid\n\nline up mid", mid_start_skills},
   });
@@ -240,7 +241,7 @@ void opcontrol() {
     // Standard split arcade with reduced turn sensitivity.
     int forward = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     int turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-    turn = static_cast<int>(turn * 0.5);  // 50% turn sensitivity
+    turn = static_cast<int>(turn * 1);  // 100% turn sensitivity
     chassis.drive_set(forward + turn, forward - turn);
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
