@@ -8,7 +8,7 @@
 
 // These are out of 127.
 // Conservative anti-tip speeds for a light robot.
-const int DRIVE_SPEED = 70;  // full speed is 127
+const int DRIVE_SPEED = 70; // full speed is 127
 const int TURN_SPEED = 50;
 const int SWING_SPEED = 65;
 
@@ -17,7 +17,7 @@ const int SWING_SPEED = 65;
 ///
 void default_constants() {
   // P, I, D, and Start I
-  chassis.pid_drive_constants_set(20.0, 0.0, 25.0);         // Fwd/rev constants, used for odom and non odom motions
+  chassis.pid_drive_constants_set(15.0, 0.0, 25.0);         // Fwd/rev constants, used for odom and non odom motions
   chassis.pid_heading_constants_set(8.0, 0.0, 35.0);         // IMU heading hold during drives
   chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
   chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
@@ -141,7 +141,7 @@ void left_start_deload() {
   // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(35_in, 55, true, false);
+  chassis.pid_drive_set(35_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 2) IMU turn left 120 degrees
@@ -161,7 +161,7 @@ void left_start_deload() {
   chassis.pid_wait();
 
   // 6) Back up 10 in
-  chassis.pid_drive_set(-15_in, 30, true, false);
+  chassis.pid_drive_set(-20_in, 35, false, false);
   chassis.pid_wait();
   intake_stage2.move(0);
   intake.move(0);
@@ -176,7 +176,7 @@ void left_start_deload() {
   intake_stage2.move(0);
 
   // 8) Drive forward 10 inches
-  chassis.pid_drive_set(10_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(8_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 9) IMU turn left 90 degrees
@@ -184,7 +184,7 @@ void left_start_deload() {
   chassis.pid_wait();
 
   // 10) Drive forward 14 inches
-  chassis.pid_drive_set(14_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(13_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 11) IMU turn right 90 degrees (return 0 deg orientation)
@@ -196,7 +196,7 @@ void left_start_deload() {
   pros::delay(200);
 
   // 12) Back up 30 in
-  chassis.pid_drive_set(-30_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(-32_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   stop_all_motors();
 }

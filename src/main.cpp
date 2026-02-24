@@ -82,7 +82,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"deload test\n\ntest deload change 3", test_deload}, 
+      {"deload test\n\ntest deload change 5", test_deload}, 
       {"left start deload\n\nleft start with deload", left_start_deload},
       {"left start deload and matchload\n\nleft start with deload and matchload", left_start_deload_and_matchload},
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
