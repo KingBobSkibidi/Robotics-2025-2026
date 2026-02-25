@@ -8,7 +8,7 @@
 
 // These are out of 127.
 // Conservative anti-tip speeds for a light robot.
-const int DRIVE_SPEED = 70; // full speed is 127
+const int DRIVE_SPEED = 80; // full speed is 127
 const int TURN_SPEED = 50;
 const int SWING_SPEED = 65;
 
@@ -141,7 +141,7 @@ void left_start_deload() {
   // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(35_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(35_in, 50, true, false);
   chassis.pid_wait();
 
   // 2) IMU turn left 120 degrees
@@ -201,6 +201,76 @@ void left_start_deload() {
   stop_all_motors();
 }
 
+void left_start_deload_slow() {
+  // 0) set imu and start match with deloader extended
+  chassis.drive_imu_reset();
+  pros::delay(100);
+  deload.set(PISTON_EXTENDED);
+  pros::delay(200);
+
+  // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
+  intake.move(127);
+  intake_stage2.move(-127);
+  chassis.pid_drive_set(35_in, 50, true, false);
+  chassis.pid_wait();
+
+  // 2) IMU turn left 120 degrees
+  chassis.pid_turn_set(-120_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 3) Drive forward 42 in
+  chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 4) IMU turn left another 50 degrees (to -170 total)
+  chassis.pid_turn_set(-170_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 5) Back up 20 in
+  chassis.pid_drive_set(-20_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 6) Back up 10 in
+  chassis.pid_drive_set(-20_in, 35, false, false);
+  chassis.pid_wait();
+  intake_stage2.move(0);
+  intake.move(0);
+
+  // 7) Set IMU and run both stages to eject balls from the top
+  pros::delay(100);
+  chassis.drive_imu_reset();
+  intake.move(127);
+  intake_stage2.move(127);
+  pros::delay(2000);
+  intake.move(0);
+  intake_stage2.move(0);
+
+  // 8) Drive forward 10 inches
+  chassis.pid_drive_set(8_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 9) IMU turn left 90 degrees
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 10) Drive forward 14 inches
+  chassis.pid_drive_set(13_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 11) IMU turn right 90 degrees (return 0 deg orientation)
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 11.5) contract deloader
+  deload.set(PISTON_CONTRACTED);
+  pros::delay(200);
+
+  // 12) Back up 30 in
+  chassis.pid_drive_set(-32_in, 50, true, false);
+  chassis.pid_wait();
+  stop_all_motors();
+}
+
 void right_start_deload() {
   // 0) set imu and start match with deloader extended
   chassis.drive_imu_reset();
@@ -211,7 +281,7 @@ void right_start_deload() {
   // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(35_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(35_in, 50, true, false);
   chassis.pid_wait();
 
   // 2) IMU turn right 120 degrees
@@ -267,6 +337,76 @@ void right_start_deload() {
 
   // 12) Back up 30 in
   chassis.pid_drive_set(-32_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+  stop_all_motors();
+}
+
+void right_start_deload_slow() {
+  // 0) set imu and start match with deloader extended
+  chassis.drive_imu_reset();
+  pros::delay(100);
+  deload.set(PISTON_EXTENDED);
+  pros::delay(200);
+
+  // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
+  intake.move(127);
+  intake_stage2.move(-127);
+  chassis.pid_drive_set(35_in, 50, true, false);
+  chassis.pid_wait();
+
+  // 2) IMU turn right 120 degrees
+  chassis.pid_turn_set(120_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 3) Drive forward 42 in
+  chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 4) IMU turn right another 50 degrees (to 170 total)
+  chassis.pid_turn_set(170_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 5) Back up 20 in
+  chassis.pid_drive_set(-20_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 6) Back up 10 in
+  chassis.pid_drive_set(-20_in, 35, false, false);
+  chassis.pid_wait();
+  intake_stage2.move(0);
+  intake.move(0);
+
+  // 7) Set IMU and run both stages to eject balls from the top
+  pros::delay(100);
+  chassis.drive_imu_reset();
+  intake.move(127);
+  intake_stage2.move(127);
+  pros::delay(2000);
+  intake.move(0);
+  intake_stage2.move(0);
+
+  // 8) Drive forward 10 inches
+  chassis.pid_drive_set(8_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 9) IMU turn left 90 degrees
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 10) Drive forward 14 inches
+  chassis.pid_drive_set(13_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+
+  // 11) IMU turn right 90 degrees (return 0 deg orientation)
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // 11.5) contract deloader
+  deload.set(PISTON_CONTRACTED);
+  pros::delay(200);
+
+  // 12) Back up 30 in
+  chassis.pid_drive_set(-32_in, 50, true, false);
   chassis.pid_wait();
   stop_all_motors();
 }
