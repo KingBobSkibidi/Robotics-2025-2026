@@ -9,7 +9,7 @@
 // These are out of 127.
 // Conservative anti-tip speeds for a light robot.
 const int DRIVE_SPEED = 80; // full speed is 127
-const int FAST_DRIVE_SPEED = 110;
+const int FAST_DRIVE_SPEED = 105;
 const int TURN_SPEED = 50;
 const int FAST_TURN_SPEED = 80;
 const int SWING_SPEED = 65;
@@ -151,8 +151,8 @@ void left_start_deload_fast() {
   chassis.pid_turn_set(-120_deg, FAST_TURN_SPEED);
   chassis.pid_wait();
 
-  // 3) Drive forward 42 in
-  chassis.pid_drive_set(42_in, FAST_DRIVE_SPEED, true, false);
+  // 3) Drive forward 43 in
+  chassis.pid_drive_set(43_in, FAST_DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 4) IMU turn left another 50 degrees (to -170 total)
@@ -199,7 +199,7 @@ void left_start_deload_fast() {
   pros::delay(200);
 
   // 12) Back up 32 in
-  chassis.pid_drive_set(-32_in, FAST_DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(-32_in, 65, true, false);
   chassis.pid_wait();
   stop_all_motors();
 }
@@ -293,8 +293,8 @@ void right_start_deload_fast() {
   chassis.pid_turn_set(120_deg, FAST_TURN_SPEED);
   chassis.pid_wait();
 
-  // 3) Drive forward 42 in
-  chassis.pid_drive_set(42_in, FAST_DRIVE_SPEED, true, false);
+  // 3) Drive forward 43 in
+  chassis.pid_drive_set(43_in, FAST_DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 4) IMU turn right another 50 degrees (to 170 total)
@@ -341,7 +341,7 @@ void right_start_deload_fast() {
   pros::delay(200);
 
   // 12) Back up 32 in
-  chassis.pid_drive_set(-32_in, FAST_DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(-32_in, 65, true, false);
   chassis.pid_wait();
   stop_all_motors();
 }
@@ -417,7 +417,7 @@ void right_start_deload() {
   stop_all_motors();
 }
 
-void right_start_deload_heavy() {
+void right_start_deload_good_side() {
   // 0) set imu and start match with deloader extended
   chassis.drive_imu_reset();
   pros::delay(100);
@@ -466,24 +466,24 @@ void right_start_deload_heavy() {
   chassis.pid_drive_set(8_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
-  // 9) IMU turn left 90 degrees
-  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  // 9) IMU turn right 90 degrees
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  // 10) Drive forward 13 inches
-  chassis.pid_drive_set(14_in, DRIVE_SPEED, true, false);
+  // 10) Drive forward 14 inches
+  chassis.pid_drive_set(16_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   // 11) IMU turn right 90 degrees (return 0 deg orientation)
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
 
   // 11.5) contract deloader
   deload.set(PISTON_CONTRACTED);
   pros::delay(200);
 
-  // 12) Back up 32 in
-  chassis.pid_drive_set(-32_in, 50, true, false);
+  // 12) Drive forward 32 in
+  chassis.pid_drive_set(26_in, 60, true, false);
   chassis.pid_wait();
   stop_all_motors();
 }
@@ -602,10 +602,28 @@ void left_start_deload_and_matchload() {
   stop_all_motors();
 }
 
-void test_deload() {
+void back_off() {
+  //0 set up
+  chassis.drive_imu_reset();
+  pros::delay(100);
   deload.set(PISTON_EXTENDED);
-  pros::delay(3000);   // wait 3 seconds
-  deload.set(PISTON_CONTRACTED);
+  matchload.set(PISTON_CONTRACTED);
+  pros::delay(200);
+
+  // 1) Drive forward 7 in
+  chassis.pid_drive_set(6_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+  stop_all_motors();
+}
+
+void do_nothing () {
+  //0 set up
+  chassis.drive_imu_reset();
+  pros::delay(100);
+  deload.set(PISTON_EXTENDED);
+  matchload.set(PISTON_CONTRACTED);
+  pros::delay(200);
+  stop_all_motors();
 }
 
 void temp_skills() {
