@@ -9,7 +9,6 @@ void left_start_deload_fast();
 void left_start_deload();
 void right_start_deload_fast();
 void right_start_deload();
-void right_start_deload_good_side();
 void left_start_deload_and_matchload();
 void temp_skills();
 void back_off();
