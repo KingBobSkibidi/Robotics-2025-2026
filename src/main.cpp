@@ -82,13 +82,13 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"right start deload good side\n\nright start turning right (open side) on deload", right_start_deload_good_side},
       {"left start deload\n\nleft start with deload change 3", left_start_deload},
       {"left start deload fast\n\nleft start with deload", left_start_deload_fast},
       {"right start deload\n\nright start with deload", right_start_deload},
       {"right start deload fast\n\nright start with deload", right_start_deload_fast},
       {"back off for solo awp\n\ndrive forward 7 inches and back off for solo awp", back_off}, 
       {"do nothing for solo awp\n\nget pushed off and do nothing for solo awp", do_nothing}, 
-      {"right start deload good side\n\nright start turning right (open side) on deload", right_start_deload_good_side},
       {"left start deload and matchload\n\nleft start with deload and matchload", left_start_deload_and_matchload},
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
